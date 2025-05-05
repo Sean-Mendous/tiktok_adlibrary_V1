@@ -1,0 +1,53 @@
+{
+    "sheet_type": "google_sheets",
+    "sheet_id": "1iP2WCeapRUAIaaTAzZGQBhKL1UU08dQUlmXa2zMu0vc",
+    "credentials_path": "bionic-tracer-458405-j3-28e3106ce590.json",
+    "sheet_1": "sheet1",
+    "sheet_2": "sheet2",
+    "column_map_1": {
+            "system_status": "A",
+      		"system_name": "B",
+      		"system_memo": "C",
+			"system_url": "D",
+
+            "headder": 2
+		},
+    "column_map_2": {
+      		"system_status": "A",
+      		"system_num": "B",
+			"system_url": "C",
+
+			"about_brand": "D",
+			"about_industry": "E",
+			"about_caption": "F",
+			"about_landing": "G",
+
+			"data_likes": "H",
+			"data_comments": "I",
+			"data_shares": "J",
+			"data_ctr": "K",
+			"data_budget": "L",
+
+            "time_ctr_top": "M",
+            "time_cvr_top": "N",
+
+            "time_ctr_sec1": "O",
+            "time_ctr_sec2": "P",
+            "time_ctr_sec3": "Q",
+
+            "time_cvr_sec1": "R",
+            "time_cvr_sec2": "S",
+            "time_cvr_sec3": "T",
+
+            "time_retention_sec1": "U",
+            "time_retention_sec2": "V",
+            "time_retention_sec3": "W",
+
+			"video_space1": "X",
+			"video_space2": "Y",
+			"video_space3": "Z",
+			"video_url": "AA",
+
+            "headder": 5
+		}
+}

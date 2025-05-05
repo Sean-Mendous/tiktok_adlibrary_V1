@@ -133,18 +133,22 @@ def time_section(htmls):
         if sec and top:
             return sec, top
         else:
-            return None
+            return False
     
     data = {}
     for key, text_section in htmls.items():
         if key == 'ctr' or key == 'CTR':
-            ctr_sec, ctr_top = get_text_from_time_data(text_section)
+            status = ctr_sec, ctr_top = get_text_from_time_data(text_section)
+            if status == False:
+                continue
             if ctr_sec:
                 data['time_ctr_sec'] = ctr_sec
             if ctr_top:
                 data['time_ctr_top'] = ctr_top
         elif key == 'cvr' or key == 'CVR':
-            cvr_sec, cvr_top = get_text_from_time_data(text_section)
+            status = cvr_sec, cvr_top = get_text_from_time_data(text_section)
+            if status == False:
+                continue
             if cvr_sec:
                 data['time_cvr_sec'] = cvr_sec
             if cvr_top:
