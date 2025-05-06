@@ -1,9 +1,8 @@
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 import time
-
 from utilities.logger import logger
-from app.selenium import *
+from app.selenium_setting import *
 
 def click_button(xpath, browser, sleep=5):
         button = browser.find_element(By.XPATH, xpath)  
@@ -63,7 +62,7 @@ def get_time_htmls(browser, original_html):
     return htmls
 
 def get_htmls(url, cookie):
-    browser = open_url(url)
+    browser = open_url(url, window_whosh=True)
     if browser: 
         logger.info(f'scrape_list.py_🟢 Opened {url[:10]}..')
         login(browser, cookie)
