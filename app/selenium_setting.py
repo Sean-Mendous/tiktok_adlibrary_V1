@@ -5,10 +5,15 @@ from webdriver_manager.chrome import ChromeDriverManager
 import json
 from utilities.logger import logger
 
-def open_url(url):
+def open_url(url, window_whosh=False):
     chrome_options = Options()
     service = Service(ChromeDriverManager().install())
     browser = webdriver.Chrome(service=service, options=chrome_options)
+    browser.set_window_size(1280, 800)
+
+    if window_whosh:
+        browser.set_window_position(-2000, 0)
+    
     browser.get(url)
     return browser
 
@@ -29,3 +34,9 @@ def logout(browser, cookie):
     logger.info(f' >scrape_list.py_Logged out')
     return None
     
+
+if __name__ == "__main__":
+    import time
+    browser = open_url("https://www.google.com")
+    time.sleep(3)
+    browser.quit()

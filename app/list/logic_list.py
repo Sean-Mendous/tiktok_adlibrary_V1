@@ -79,7 +79,7 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
         output_data_2 = []
         for i, url in enumerate(url_list, start=1):
             data = {
-                "system_num": f"i",
+                "system_num": i,
                 "system_status": 'pending',
                 "system_url": url
             }
