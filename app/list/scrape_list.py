@@ -3,15 +3,33 @@ from utilities.logger import logger
 from app.selenium_setting import *
 
 def get_html(url, cookie):
-    browser = open_url(url, window_whosh=False)
-    if browser: 
-        logger.info(f'scrape_list.py_🟢 Opened {url[:10]}..')
+    try:
+        browser = open_url(url, window_whosh=False)
+        logger.info(f' >opened {url[:10]}..')
+        if not browser:
+            raise RuntimeError(f'Failed to open {url[:10]}..')
+    except Exception as e:
+        raise RuntimeError(f'Failed to open {url[:10]}..: {e}') from e
+
+    try:
         login(browser, cookie)
+        logger.info(f' >logged in')
+    except Exception as e:
+        raise RuntimeError(f'Failed to login: {e}') from e
+
+    try:
         input('scroll down and press enter: ')
         html = browser.page_source
-        logout(browser, cookie)
-    else:
-        logger.error(f'scrape_list.py_🔴 Failed to open {url[:10]}..')
-        return None
+        if not html:
+            raise RuntimeError(f'Failed to scrape html')
+        logger.info(f' >scraped html')
+    except Exception as e:
+        raise RuntimeError(f'Failed to scrape html: {e}') from e
 
-    return html
+    try:    
+        logout(browser, cookie)
+        logger.info(f' >logged out')
+        return html
+    except Exception as e:
+        raise RuntimeError(f'Failed to open {url[:10]}..: {e}') from e
+
