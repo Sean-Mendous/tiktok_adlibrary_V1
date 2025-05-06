@@ -79,7 +79,7 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
         output_data_2 = []
         for i, url in enumerate(url_list, start=1):
             data = {
-                "system_num": f"{i:03}",
+                "system_num": f"i",
                 "system_status": 'pending',
                 "system_url": url
             }
@@ -95,13 +95,13 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
 
         try:
             row_2 = headder_2
-            output_status = output_google_spreadsheet_multi(sheet_2, column_map_2, row_2, data)
+            output_status = output_google_spreadsheet_multi(sheet_2, column_map_2, row_2, output_data_2)
             if output_status == True:
-                logger.info(f'logic_list.py_🟢 Successfully outputted for data[{data["system_num"]}]:\n{data}')
+                logger.info(f'logic_list.py_🟢 Successfully outputted datas')
             elif output_status == False:
-                logger.error(f'logic_list.py_🔴 Failed to output for data[{data["system_num"]}]:\n{data}')
+                logger.error(f'logic_list.py_🔴 Failed to output datas')
         except Exception as e:
-            logger.error(f'logic_list.py_🔴 Failed to output for #{row_1}: {e}')
+            logger.error(f'logic_list.py_🔴 Failed to output datas: {e}')
             return False
         
         try:

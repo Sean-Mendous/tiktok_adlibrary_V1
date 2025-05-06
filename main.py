@@ -42,7 +42,7 @@ else:
 
 """
 python main.py --client client_test --start_row 3 --end_row 6 --system 1
-python main.py --client client_test --start_row 3 --end_row 6 --system 2
+python main.py --client client_test --start_row 3 --end_row 4 --system 2
 """
 
 

@@ -4,3 +4,4 @@ logs/
 *.pyc.env
 *.env
 *.json
+.DS_Store

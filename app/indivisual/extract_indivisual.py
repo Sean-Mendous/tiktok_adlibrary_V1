@@ -27,13 +27,17 @@ def about_section(soup):
     if about_section:
         metric_items = about_section.find_all("div", class_="BasicInfoItem_container__pjw4E index-mobile_container__2MFvR TopadsDetailPage_infoItem__vs2lI")
         for item in metric_items:
-
             label = item.find("span", class_="BasicInfoItem_title__4z_CB")
             if label:
                 label_text = label.get_text(strip=True)
+            else:
+                label_text = None
+
             value = item.find("span", class_="BasicInfoItem_value__psIua")
             if value:
                 value_text = value.get_text(strip=True)
+            else:
+                value_text = None
 
             if label_text and value_text:
                 if label_text == '産業' or label_text == 'Industry':
@@ -42,10 +46,8 @@ def about_section(soup):
                     data['about_brand'] = value_text  
                 else:
                     continue
-            else:
-                continue
 
-            if label_text:
+            elif label_text:
                 if label_text == 'ランディングページ' or label_text == 'Landing Page':
                     a_tag = item.find("a")
                     if a_tag:
@@ -54,8 +56,6 @@ def about_section(soup):
                     div_tag = item.find("div")
                     if div_tag:
                         data['about_caption'] = div_tag.get_text(strip=True)
-                else:
-                    continue
             else:
                 continue
     return data
@@ -138,43 +138,48 @@ def time_section(htmls):
     data = {}
     for key, text_section in htmls.items():
         if key == 'ctr' or key == 'CTR':
-            status = ctr_sec, ctr_top = get_text_from_time_data(text_section)
-            if status == False:
+            ctr = get_text_from_time_data(text_section)
+            if ctr:
+                ctr_sec, ctr_top = ctr
+                if ctr_sec:
+                    data['time_ctr_sec'] = ctr_sec
+                if ctr_top:
+                    data['time_ctr_top'] = ctr_top
+            else:
                 continue
-            if ctr_sec:
-                data['time_ctr_sec'] = ctr_sec
-            if ctr_top:
-                data['time_ctr_top'] = ctr_top
         elif key == 'cvr' or key == 'CVR':
-            status = cvr_sec, cvr_top = get_text_from_time_data(text_section)
-            if status == False:
+            cvr = get_text_from_time_data(text_section)
+            if cvr:
+                cvr_sec, cvr_top = cvr
+                if cvr_sec:
+                    data['time_cvr_sec'] = cvr_sec
+                if cvr_top:
+                    data['time_cvr_top'] = cvr_top
+            else:
                 continue
-            if cvr_sec:
-                data['time_cvr_sec'] = cvr_sec
-            if cvr_top:
-                data['time_cvr_top'] = cvr_top
         else:
             continue
     return data
 
 def format_timedata(data):
     formatted_data = {}
-    if data['time_ctr_sec']:
+    if 'time_ctr_sec' in data and data['time_ctr_sec']:
         time_ctr_sec = data['time_ctr_sec']
         ctr_time_keys = ['time_ctr_sec1', 'time_ctr_sec2', 'time_ctr_sec3']
         ctr_time_data = dict(zip(ctr_time_keys, time_ctr_sec))
         formatted_data.update({
             **ctr_time_data,
         })
-    if data['time_cvr_sec']:
+    if 'time_cvr_sec' in data and data['time_cvr_sec']:
         time_cvr_sec = data['time_cvr_sec']
         cvr_time_keys = ['time_cvr_sec1', 'time_cvr_sec2', 'time_cvr_sec3']
         cvr_time_data = dict(zip(cvr_time_keys, time_cvr_sec))
         formatted_data.update({
             **cvr_time_data,
         })
-    if data['time_ctr_top'] and data['time_cvr_top']:
+    if 'time_ctr_top' in data and data['time_ctr_top']:
         formatted_data['time_ctr_top'] = data['time_ctr_top']
+    if 'time_cvr_top' in data and data['time_cvr_top']:
         formatted_data['time_cvr_top'] = data['time_cvr_top']
     
     return formatted_data
