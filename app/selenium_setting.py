@@ -23,7 +23,6 @@ def login(browser, cookie):
     for cookie in cookies:
         browser.add_cookie(cookie)
     browser.refresh()
-    logger.info(f' >scrape_list.py_Logged in')
     return None
 
 def logout(browser, cookie):
@@ -31,7 +30,6 @@ def logout(browser, cookie):
     with open(cookie, "w") as file:
         json.dump(cookies, file)
     browser.quit()
-    logger.info(f' >scrape_list.py_Logged out')
     return None
     
 
