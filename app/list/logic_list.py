@@ -22,24 +22,37 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
         logger.error(f'logic_list.py_🔴 Failed to get sheet_1')
         return False
     
-    for row_1 in range(start_row, end_row):
-        time.sleep(1)
+    try:
+        input_multi_data_1 = input_google_spreadsheet_multi(sheet_1, column_map_1, start_row, end_row)
+        if input_multi_data_1:
+            logger.info(f'logic_list.py_🟢 Successfully got sheet_1')
+        else:
+            logger.error(f'logic_list.py_🔴 Failed to get sheet_1')
+            return False
+    except Exception as e:
+        logger.error(f'logic_list.py_🔴 Failed to get sheet_1: {e}')
+        return False
+
+    row_1 = start_row
+    for data in input_multi_data_1:
         logger.info(f"======start #{row_1}=======")
-        input_data_1 = input_google_spreadsheet(sheet_1, column_map_1, row_1)
-        sheet_2_name = input_data_1["system_name"]
-        url = input_data_1["system_url"]
-        status = input_data_1["system_status"]
+        sheet_2_name = data["system_name"]
+        url = data["system_url"]
+        status = data["system_status"]
 
         if not sheet_2_name:
             logger.info(f"logic_list.py_🟡 #{row_1} does not have a name")
+            row_1 += 1
             continue
 
         if not url:
             logger.info(f"logic_list.py_🟡 #{row_1} does not have a url")
+            row_1 += 1
             continue
 
-        if status == 'pending' and status == 'completed':
+        if status == 'pending' or status == 'completed':
             logger.info(f"logic_list.py_🟡 #{row_1} is already completed")
+            row_1 += 1
             continue
 
         sheet_2 = duplicate_google_sheet(sheet_id, sheet_original_2, credentials_path, sheet_2_name)
@@ -82,15 +95,11 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
 
         try:
             row_2 = headder_2
-            for data in output_data_2:
-                output_status = output_google_spreadsheet(sheet_2, column_map_2, row_2, data)
-                if output_status == True:
-                    logger.info(f'logic_list.py_🟢 Successfully outputted for data[{data["system_num"]}]:\n{data}')
-                elif output_status == False:
-                    logger.error(f'logic_list.py_🔴 Failed to output for data[{data["system_num"]}]:\n{data}')
-                row_2 += 1
-                time.sleep(1)
-                continue
+            output_status = output_google_spreadsheet_multi(sheet_2, column_map_2, row_2, data)
+            if output_status == True:
+                logger.info(f'logic_list.py_🟢 Successfully outputted for data[{data["system_num"]}]:\n{data}')
+            elif output_status == False:
+                logger.error(f'logic_list.py_🔴 Failed to output for data[{data["system_num"]}]:\n{data}')
         except Exception as e:
             logger.error(f'logic_list.py_🔴 Failed to output for #{row_1}: {e}')
             return False
@@ -108,3 +117,4 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
             return False
 
         logger.info(f"======end #{row_1}=======")
+        row_1 += 1
