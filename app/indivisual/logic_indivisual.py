@@ -75,26 +75,23 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
             raise RuntimeError(f'Failed to get multi_input for sheet_2: {e}') from e
         
         row_2 = first_row
-        error_detection = False
         error_count = 0
         for data2 in input_multi_data_2:
 
-            if error_count > 5:
-                raise RuntimeError(f'🔴 #{row_1}: got failed 10 times')
-
-            if error_detection == True:
+            if error_count:
+                if error_count > 5:
+                    raise RuntimeError(f'🔴 #{row_1}: got failed multi times')
                 try:
                     output_status_2 = {}
                     output_status_2["system_status"] = 'error'
-                    output_status = output_google_spreadsheet(sheet_2, column_map_2, row_2-1, output_status_2)
+                    output_status = output_google_spreadsheet(sheet_2, column_map_2, row_2, output_status_2)
                     if output_status == True:
                         logger.info(f'03 - 00/00: 🟢 Successfully outputted status for sheet_2')
                     else:
                         raise RuntimeError(f'Failed to output status for sheet_2')
                 except Exception as e:
                     raise RuntimeError(f'Failed to output status for sheet_2: {e}') from e
-                error_detection = False
-                error_count += 1
+                row_2 += 1
 
             logger.info(f"🔄 ~starting for #{row_1} - {row_2}~ 🔄")
             url = data2["system_url"]
@@ -103,14 +100,12 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
 
             if not url:
                 logger.error(f'🔴 {row_2}: does not have a url')
-                row_2 += 1
-                error_detection = True
+                error_count += 1
                 continue
 
             if not num:
                 logger.error(f'🔴 {row_2}: does not have a number')
-                row_2 += 1
-                error_detection = True
+                error_count += 1
                 continue
             
             if sheet_2_status == 'completed':
@@ -137,8 +132,7 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
                     time.sleep(1)
             else:
                 logger.error(f'🔴 {row_2}: Failed to get html from {url[:10]}..')
-                error_detection = True
-                row_2 += 1
+                error_count += 1
                 continue
             
             try:
@@ -147,13 +141,11 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
                     logger.info(f'03-02/06: 🟢 Successfully extracted data from {url[:10]}..')
                 else:
                     logger.error(f'🔴 {row_2}: Failed to extract data from {url[:10]}..')
-                    error_detection = True
-                    row_2 += 1
+                    error_count += 1
                     continue
             except Exception as e:
                 logger.error(f'🔴 {row_2}: Failed to extract data from {url[:10]}..: {e}')
-                error_detection = True
-                row_2 += 1
+                error_count += 1
                 continue
             
             try:
@@ -163,13 +155,11 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
                     logger.info(f'03-03/06: 🟢 Successfully saved data to json')
                 else:
                     logger.error(f'🔴 {row_2}: Failed to save data to json')
-                    error_detection = True
-                    row_2 += 1
+                    error_count += 1
                     continue
             except Exception as e:
                 logger.error(f'🔴 {row_2}: Failed to save data to json: {e}')
-                error_detection = True
-                row_2 += 1
+                error_count += 1
                 continue
 
             try:
@@ -178,13 +168,11 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
                     logger.info(f'03-04/06: 🟢 Successfully outputted for data:\n{output_data_2}')
                 else:
                     logger.error(f'🔴 {row_2}: Failed to output for data:\n{output_data_2}')
-                    error_detection = True
-                    row_2 += 1
+                    error_count += 1
                     continue
             except Exception as e:
                 logger.error(f'🔴 {row_2}: Failed to output for data:\n{output_data_2}: {e}')
-                error_detection = True
-                row_2 += 1
+                error_count += 1
                 continue
         
             try:
@@ -195,13 +183,11 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
                     logger.info(f'03-05/06: 🟢 Successfully outputted status for sheet_2')
                 else:
                     logger.error(f'🔴 {row_2}: Failed to output status for sheet_2')
-                    error_detection = True
-                    row_2 += 1
+                    error_count += 1
                     continue
             except Exception as e:
                 logger.error(f'🔴 {row_2}: Failed to output status for sheet_2: {e}')
-                error_detection = True
-                row_2 += 1
+                error_count += 1
                 continue
         
             try:
@@ -212,13 +198,11 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
                     logger.info(f'03-06/06: 🟢 Successfully outputted status for sheet_1')
                 else:
                     logger.error(f'🔴 {row_1}: Failed to output status for sheet_1')
-                    error_detection = True
-                    row_1 += 1
+                    error_count += 1
                     continue
             except Exception as e:
                 logger.error(f'🔴 {row_1}: Failed to output status for sheet_1: {e}')
-                error_detection = True
-                row_1 += 1
+                error_count += 1
                 continue
             
             logger.info(f"🔄 ~ending for #{row_1} - {row_2}~ 🔄")
