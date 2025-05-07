@@ -7,6 +7,7 @@ from utilities.logger import logger
 
 def open_url(url, window_whosh=False):
     chrome_options = Options()
+    chrome_options.add_argument("--mute-audio")  # ミュートオプション
     service = Service(ChromeDriverManager().install())
     browser = webdriver.Chrome(service=service, options=chrome_options)
     browser.set_window_size(1280, 800)
