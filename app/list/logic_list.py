@@ -51,7 +51,7 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
             row_1 += 1
             continue
 
-        if status == 'pending' or status == 'completed':
+        if status == 'pending' or status == 'completed' or status.isdigit():
             logger.warning(f"🟡 #{row_1} is already completed. Going to next row.")
             row_1 += 1
             continue
@@ -92,6 +92,13 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
                 "system_url": url
             }
             output_data_2.append(data)
+        
+        alldone_data = {
+            "system_num": 9999,
+            "system_status": 'all-done',
+            "system_url": '-'
+        }
+        output_data_2.append(alldone_data)
             
         try:
             list_output_path = f"{output_path}/sheet_{sheet_2_name}/scrape_list.json"

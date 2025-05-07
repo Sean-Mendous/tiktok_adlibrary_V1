@@ -1,7 +1,7 @@
 {
     "sheet_type": "google_sheets",
     "sheet_id": "1iP2WCeapRUAIaaTAzZGQBhKL1UU08dQUlmXa2zMu0vc",
-    "credentials_path": "bionic-tracer-458405-j3-28e3106ce590.json",
+    "credentials_path": "spreadsheet_config.json",
     "sheet_1": "sheet1",
     "sheet_2": "sheet2",
     "column_map_1": {

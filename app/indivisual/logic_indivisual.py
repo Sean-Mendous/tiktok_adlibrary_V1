@@ -76,7 +76,12 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
         
         row_2 = first_row
         error_detection = False
+        error_count = 0
         for data2 in input_multi_data_2:
+
+            if error_count > 10:
+                raise RuntimeError(f'🔴 #{row_1}: got failed 10 times')
+
             if error_detection == True:
                 try:
                     output_status_2 = {}
@@ -89,6 +94,7 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
                 except Exception as e:
                     raise RuntimeError(f'Failed to output status for sheet_2: {e}') from e
                 error_detection = False
+                error_count += 1
 
             logger.info(f"🔄 ~starting for #{row_1} - {row_2}~ 🔄")
             url = data2["system_url"]
@@ -96,15 +102,25 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
             sheet_2_status = data2["system_status"]
 
             if not url:
-                raise RuntimeError(f"{row_2}: does not have a url")
+                logger.error(f'🔴 {row_2}: does not have a url')
+                row_2 += 1
+                error_detection = True
+                continue
 
             if not num:
-                raise RuntimeError(f"{row_2}: does not have a number")
+                logger.error(f'🔴 {row_2}: does not have a number')
+                row_2 += 1
+                error_detection = True
+                continue
             
             if sheet_2_status == 'completed':
                 logger.warning(f"🟡 {row_2}: is already completed")
                 row_2 += 1
                 continue
+
+            if sheet_2_status == 'all-done':
+                logger.info(f"🟢 {row_1}: Detected all-done")
+                break
 
             MAX_RETRIES = 5
             for attempt in range(1, MAX_RETRIES + 1):
@@ -130,9 +146,15 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
                 if output_data_2:
                     logger.info(f'03-02/06: 🟢 Successfully extracted data from {url[:10]}..')
                 else:
-                    raise RuntimeError(f'Failed to extract data from {url[:10]}..')
+                    logger.error(f'🔴 {row_2}: Failed to extract data from {url[:10]}..')
+                    error_detection = True
+                    row_2 += 1
+                    continue
             except Exception as e:
-                raise RuntimeError(f'Failed to extract data from {url[:10]}..: {e}') from e
+                logger.error(f'🔴 {row_2}: Failed to extract data from {url[:10]}..: {e}')
+                error_detection = True
+                row_2 += 1
+                continue
             
             try:
                 indivisual_output_path = f"{output_path}/sheet_{sheet_2_name}/{num:03}/scrape_indivisual.json"
@@ -140,18 +162,30 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
                 if save_status == True:
                     logger.info(f'03-03/06: 🟢 Successfully saved data to json')
                 else:
-                    raise RuntimeError(f'Failed to save data to json')
+                    logger.error(f'🔴 {row_2}: Failed to save data to json')
+                    error_detection = True
+                    row_2 += 1
+                    continue
             except Exception as e:
-                raise RuntimeError(f'Failed to save data to json: {e}') from e
+                logger.error(f'🔴 {row_2}: Failed to save data to json: {e}')
+                error_detection = True
+                row_2 += 1
+                continue
 
             try:
                 output_status = output_google_spreadsheet(sheet_2, column_map_2, row_2, output_data_2)
                 if output_status == True:
                     logger.info(f'03-04/06: 🟢 Successfully outputted for data:\n{output_data_2}')
                 else:
-                    raise RuntimeError(f'Failed to output for data:\n{output_data_2}')
+                    logger.error(f'🔴 {row_2}: Failed to output for data:\n{output_data_2}')
+                    error_detection = True
+                    row_2 += 1
+                    continue
             except Exception as e:
-                raise RuntimeError(f'Failed to output for data:\n{output_data_2}: {e}') from e
+                logger.error(f'🔴 {row_2}: Failed to output for data:\n{output_data_2}: {e}')
+                error_detection = True
+                row_2 += 1
+                continue
         
             try:
                 output_status_2 = {}
@@ -160,9 +194,15 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
                 if output_status == True:
                     logger.info(f'03-05/06: 🟢 Successfully outputted status for sheet_2')
                 else:
-                    raise RuntimeError(f'Failed to output status for sheet_2')
+                    logger.error(f'🔴 {row_2}: Failed to output status for sheet_2')
+                    error_detection = True
+                    row_2 += 1
+                    continue
             except Exception as e:
-                raise RuntimeError(f'Failed to output status for sheet_2: {e}') from e
+                logger.error(f'🔴 {row_2}: Failed to output status for sheet_2: {e}')
+                error_detection = True
+                row_2 += 1
+                continue
         
             try:
                 output_status_1 = {}
@@ -171,9 +211,15 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
                 if output_status == True:
                     logger.info(f'03-06/06: 🟢 Successfully outputted status for sheet_1')
                 else:
-                    raise RuntimeError(f'Failed to output status for sheet_1')
+                    logger.error(f'🔴 {row_1}: Failed to output status for sheet_1')
+                    error_detection = True
+                    row_1 += 1
+                    continue
             except Exception as e:
-                raise RuntimeError(f'Failed to output status for sheet_1: {e}') from e
+                logger.error(f'🔴 {row_1}: Failed to output status for sheet_1: {e}')
+                error_detection = True
+                row_1 += 1
+                continue
             
             logger.info(f"🔄 ~ending for #{row_1} - {row_2}~ 🔄")
             row_2 += 1
@@ -186,8 +232,8 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
         if output_status == True:
             logger.info(f'04 - 01/01: 🟢 Successfully outputted final status for sheet_1')
         else:
-            raise RuntimeError(f'Failed to output final status for sheet_1')
+            logger.error(f'🔴 {row_1}: Failed to output final status for sheet_1')
     except Exception as e:
-        raise RuntimeError(f'Failed to output final status for sheet_1: {e}') from e
+        logger.error(f'🔴 {row_1}: Failed to output final status for sheet_1: {e}')
 
     logger.info(f"==ending for #{row_1}==")
