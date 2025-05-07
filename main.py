@@ -5,6 +5,9 @@ import sys
 import traceback
 from utilities.logger import logger
 
+from utilities.line_notify import send_line_notify
+line_token = 'U51db96863351e36f656219f8afc437d9'
+
 logger.info("0000: 🏃‍♀️🏃‍♀️ Starting main execution 🏃‍♀️🏃‍♀️")
 
 logger.info("0100: Parsing arguments")
@@ -44,8 +47,10 @@ if system_num == 1:
         from app.list.logic_list import run_flow
         run_flow(start_row, end_row, cookie, client_output_path, spreadsheet)
         logger.info(f"0600: 🟢 success for @{args.client}")
+        send_line_notify(f"🍹 success for @{args.client} 🍹", line_token)
     except Exception as e:
         logger.critical(f"C0600: 🔴 error occurred while running system: {e}")
+        send_line_notify(f"🚨 error occurred while running system: {e} 🚨", line_token)
         traceback.print_exc()
         sys.exit(2)
 elif system_num == 2:
@@ -53,8 +58,10 @@ elif system_num == 2:
         from app.indivisual.logic_indivisual import run_flow
         run_flow(start_row, end_row, cookie, client_output_path, spreadsheet)
         logger.info(f"0600: 🟢 success for @{args.client}")
+        send_line_notify(f"🍹 success for @{args.client} 🍹", line_token)
     except Exception as e:
         logger.critical(f"C0600: 🔴 error occurred while running system: {e}")
+        send_line_notify(f"🚨 error occurred while running system: {e} 🚨", line_token)
         traceback.print_exc()
         sys.exit(2)
 else:
