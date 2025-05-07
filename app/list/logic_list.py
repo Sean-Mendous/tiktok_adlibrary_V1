@@ -2,14 +2,11 @@ import time
 from utilities.google_spreadsheet import *
 from utilities.save_file import *
 from utilities.logger import logger
-from utilities.line_notify import send_line_notify
 from app.list.scrape_list import get_html
 from app.list.extract_list import extract_list
 
 
 def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
-    line_token = 'U51db96863351e36f656219f8afc437d9'
-
     sheet_id = spreadsheet["sheet_id"]
     sheet_1 = spreadsheet["sheet_1"]
     sheet_original_2 = spreadsheet["sheet_2"]
@@ -136,5 +133,4 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
             raise RuntimeError(f'Failed to output status for sheet {sheet_2_name}: {e}') from e
 
         logger.info(f"==ending for #{row_1}===")
-        send_line_notify(f"#{row_1} - {sheet_2_name} is completed", line_token)
         row_1 += 1
