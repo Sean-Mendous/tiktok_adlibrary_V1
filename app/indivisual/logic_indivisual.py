@@ -35,6 +35,8 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
 
     row_1 = start_row
     for data1 in input_multi_data_1:
+        logger.info('')
+        logger.info('')
         logger.info(f"==starting for #{row_1}/{end_row}==")
         sheet_2_name = data1["system_name"]
         sheet_1_status = data1["system_status"]
@@ -77,8 +79,8 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
         row_2 = first_row
         error_count = 0
         for data2 in input_multi_data_2:
-            logger.info(f"error_count: {error_count}")
-            logger.info(f"(now on sleep..)")
+            print(f"\nerror_count: {error_count}")
+            print(f"(now on sleep..)\n")
             time.sleep(5)
             
             if error_count:
@@ -96,6 +98,7 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
                     raise RuntimeError(f'Failed to output status for sheet_2: {e}') from e
                 row_2 += 1
 
+            logger.info('')
             logger.info(f"🔄 ~starting for #{row_1} - {row_2}~ 🔄")
             url = data2["system_url"]
             num = data2["system_num"]
@@ -208,7 +211,7 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
                 error_count += 1
                 continue
             
-            logger.info(f"🔄 ~ending for #{row_1} - {row_2}~ 🔄\n")
+            logger.info(f"🔄 ~ending for #{row_1} - {row_2}~ 🔄")
             error_count = 0
             row_2 += 1
         
@@ -223,5 +226,5 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
         except Exception as e:
             raise RuntimeError(f'🔴 {row_1}: Failed to output final status for sheet_1: {e}') from e
 
-        logger.info(f"==ending for #{row_1}/{end_row}==\n")
+        logger.info(f"==ending for #{row_1}/{end_row}==")
         row_1 += 1
