@@ -79,7 +79,7 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
         error_count = 0
         for data2 in input_multi_data_2:
 
-            if error_count > 10:
+            if error_count > 5:
                 raise RuntimeError(f'🔴 #{row_1}: got failed 10 times')
 
             if error_detection == True:
@@ -222,6 +222,7 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
                 continue
             
             logger.info(f"🔄 ~ending for #{row_1} - {row_2}~ 🔄")
+            error_count = 0
             row_2 += 1
             time.sleep(5)
         
