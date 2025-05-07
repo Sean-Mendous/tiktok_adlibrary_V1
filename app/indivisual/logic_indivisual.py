@@ -2,6 +2,7 @@ import time
 from utilities.google_spreadsheet import *
 from utilities.save_file import *
 from utilities.logger import logger
+from utilities.line_notify import send_line_notify
 from app.indivisual.scrape_indivisual import get_htmls
 from app.indivisual.extract_indivisual import extract_indivisual
 
