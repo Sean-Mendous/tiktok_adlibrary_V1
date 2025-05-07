@@ -35,7 +35,7 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
 
     row_1 = start_row
     for data1 in input_multi_data_1:
-        logger.info(f"==starting for #{row_1}===")
+        logger.info(f"==starting for #{row_1}/{end_row}==")
         sheet_2_name = data1["system_name"]
         sheet_1_status = data1["system_status"]
 
@@ -77,7 +77,10 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
         row_2 = first_row
         error_count = 0
         for data2 in input_multi_data_2:
-
+            logger.info(f"error_count: {error_count}")
+            logger.info(f"(now on sleep..)")
+            time.sleep(5)
+            
             if error_count:
                 if error_count > 5:
                     raise RuntimeError(f'🔴 #{row_1}: got failed multi times')
@@ -205,20 +208,20 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
                 error_count += 1
                 continue
             
-            logger.info(f"🔄 ~ending for #{row_1} - {row_2}~ 🔄")
+            logger.info(f"🔄 ~ending for #{row_1} - {row_2}~ 🔄\n")
             error_count = 0
             row_2 += 1
-            time.sleep(5)
         
-    try:
-        output_status_1 = {}
-        output_status_1["system_status"] = 'completed'
-        output_status = output_google_spreadsheet(sheet_1, column_map_1, row_1, output_status_1)
-        if output_status == True:
-            logger.info(f'04 - 01/01: 🟢 Successfully outputted final status for sheet_1')
-        else:
-            logger.error(f'🔴 {row_1}: Failed to output final status for sheet_1')
-    except Exception as e:
-        logger.error(f'🔴 {row_1}: Failed to output final status for sheet_1: {e}')
+        try:
+            output_status_1 = {}
+            output_status_1["system_status"] = 'completed'
+            output_status = output_google_spreadsheet(sheet_1, column_map_1, row_1, output_status_1)
+            if output_status == True:
+                logger.info(f'04 - 01/01: 🟢 Successfully outputted final status for sheet_1')
+            else:
+                raise RuntimeError(f'🔴 {row_1}: Failed to output final status for sheet_1')
+        except Exception as e:
+            raise RuntimeError(f'🔴 {row_1}: Failed to output final status for sheet_1: {e}') from e
 
-    logger.info(f"==ending for #{row_1}==")
+        logger.info(f"==ending for #{row_1}/{end_row}==\n")
+        row_1 += 1
