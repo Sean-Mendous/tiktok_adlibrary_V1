@@ -75,6 +75,7 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
             raise RuntimeError(f'Failed to get multi_input for sheet_2: {e}') from e
         
         row_2 = first_row
+        error_detection = False
         for data2 in input_multi_data_2:
             if error_detection == True:
                 try:
