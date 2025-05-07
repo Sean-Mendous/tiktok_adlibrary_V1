@@ -76,6 +76,19 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
         
         row_2 = first_row
         for data2 in input_multi_data_2:
+            if error_detection == True:
+                try:
+                    output_status_2 = {}
+                    output_status_2["system_status"] = 'error'
+                    output_status = output_google_spreadsheet(sheet_2, column_map_2, row_2-1, output_status_2)
+                    if output_status == True:
+                        logger.info(f'03 - 00/00: 🟢 Successfully outputted status for sheet_2')
+                    else:
+                        raise RuntimeError(f'Failed to output status for sheet_2')
+                except Exception as e:
+                    raise RuntimeError(f'Failed to output status for sheet_2: {e}') from e
+                error_detection = False
+
             logger.info(f"🔄 ~starting for #{row_1} - {row_2}~ 🔄")
             url = data2["system_url"]
             num = data2["system_num"]
@@ -107,6 +120,7 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
                     time.sleep(1)
             else:
                 logger.error(f'🔴 {row_2}: Failed to get html from {url[:10]}..')
+                error_detection = True
                 row_2 += 1
                 continue
             
