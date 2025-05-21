@@ -2,7 +2,7 @@ from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 import time
 from utilities.logger import logger
-from app.selenium_setting import *
+from app.scraping.selenium_setting import *
 
 def click_button(xpath, browser, sleep=5):
     try:

@@ -4,8 +4,8 @@ import os
 import sys
 import traceback
 from utilities.logger import logger
-from utilities.line_notify import send_line_notify
-line_token = 'U51db96863351e36f656219f8afc437d9'
+# from utilities.line_notify import send_line_notify
+# line_token = 'U51db96863351e36f656219f8afc437d9'
 
 logger.info("0000: 🏃‍♀️🏃‍♀️ Starting main execution 🏃‍♀️🏃‍♀️")
 
