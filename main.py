@@ -4,7 +4,6 @@ import os
 import sys
 import traceback
 from utilities.logger import logger
-
 from utilities.line_notify import send_line_notify
 line_token = 'U51db96863351e36f656219f8afc437d9'
 
@@ -44,24 +43,24 @@ cookie = 'cookies.json'
 logger.info("0500: Running system")
 if system_num == 1:
     try:
-        from app.list.logic_list import run_flow
+        from app.scraping.list.logic_list import run_flow
         run_flow(start_row, end_row, cookie, client_output_path, spreadsheet)
         logger.info(f"0600: 🟢 success for @{args.client}")
-        send_line_notify(f"🍹 success for @{args.client} 🍹", line_token)
+        # send_line_notify(f"🍹 success for @{args.client} 🍹", line_token)
     except Exception as e:
         logger.critical(f"C0600: 🔴 error occurred while running system: {e}")
-        send_line_notify(f"🚨 error occurred while running system: {e} 🚨", line_token)
+        # send_line_notify(f"🚨 error occurred while running system: {e} 🚨", line_token)
         traceback.print_exc()
         sys.exit(2)
 elif system_num == 2:
     try:
-        from app.indivisual.logic_indivisual import run_flow
+        from app.scraping.indivisual.logic_indivisual import run_flow
         run_flow(start_row, end_row, cookie, client_output_path, spreadsheet)
         logger.info(f"0600: 🟢 success for @{args.client}")
-        send_line_notify(f"🍹 success for @{args.client} 🍹", line_token)
+        # send_line_notify(f"🍹 success for @{args.client} 🍹", line_token)
     except Exception as e:
         logger.critical(f"C0600: 🔴 error occurred while running system: {e}")
-        send_line_notify(f"🚨 error occurred while running system: {e} 🚨", line_token)
+        # send_line_notify(f"🚨 error occurred while running system: {e} 🚨", line_token)
         traceback.print_exc()
         sys.exit(2)
 else:
@@ -72,7 +71,7 @@ else:
 logger.info("0700: 🍺🍺 main execution completed 🍺🍺")
 
 """
-python main.py --client client_test --start_row 3 --end_row 6 --system 1
+python main.py --client client_samurai --start_row 3 --end_row 7 --system 1
 python main.py --client client_test --start_row 4 --end_row 6 --system 2
 """
 

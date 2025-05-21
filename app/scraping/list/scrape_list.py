@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from utilities.logger import logger
-from app.selenium_setting import *
+from app.scraping.selenium_setting import *
 
 def get_html(url, cookie):
     try:

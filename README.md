@@ -1,0 +1,31 @@
+## Python File Structure
+- Project-Root/
+    - logs/
+    - clients/
+        - client_AAA/
+        - client_BBB/
+        - ...
+    - app/
+        - scraping/
+            - list/
+                - logic_list.py
+                - scrape_list.py
+                - extract_list.py
+                - transform_list.py
+                - db_list.py
+            - indivisual/
+                - logic_indivisual.py
+                - scrape_indivisual.py
+                - extract_indivisual.py
+                - transform_indivisual.py
+                - db_indivisual.py
+            - selenium_setting.py
+        - basic_analysing/
+            - text
+            - other
+        - advance_analysing/
+            - music
+            - video
+        - db/
+            - supabase_setting.py
+    - main.py

@@ -1,9 +1,13 @@
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import time
 from utilities.google_spreadsheet import *
 from utilities.save_file import *
 from utilities.logger import logger
-from app.indivisual.scrape_indivisual import get_htmls
-from app.indivisual.extract_indivisual import extract_indivisual
+from app.scraping.indivisual.scrape_indivisual import get_htmls
+from app.scraping.indivisual.extract_indivisual import extract_indivisual
 
 def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
     sheet_id = spreadsheet["sheet_id"]
@@ -35,8 +39,6 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
 
     row_1 = start_row
     for data1 in input_multi_data_1:
-        logger.info('')
-        logger.info('')
         logger.info(f"==starting for #{row_1}/{end_row}==")
         sheet_2_name = data1["system_name"]
         sheet_1_status = data1["system_status"]
@@ -226,5 +228,5 @@ def run_flow(start_row, end_row, cookie, output_path, spreadsheet):
         except Exception as e:
             raise RuntimeError(f'🔴 {row_1}: Failed to output final status for sheet_1: {e}') from e
 
-        logger.info(f"==ending for #{row_1}/{end_row}==")
+        logger.info(f"==ending for #{row_1}/{end_row}==\n\n")
         row_1 += 1
